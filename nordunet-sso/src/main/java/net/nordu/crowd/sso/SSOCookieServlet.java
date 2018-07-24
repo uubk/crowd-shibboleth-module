@@ -125,12 +125,15 @@ public class SSOCookieServlet extends NORDUnetHtmlServlet {
             for (Application app : applications) {
                Set<RemoteAddress> remoteAddresses = app.getRemoteAddresses();
                for (RemoteAddress address : remoteAddresses) {
+                  log.trace("App " + app.getName() + " at " + address.getAddress().toString());
                   if (address.getAddress().equals(reqURL.getHost())) {
                      requestedApplicationName = app.getName();
                      break;
                   }
                }
             }
+         } else {
+            log.info("User has no authorized applications!");
          }
       } catch (MalformedURLException e) {
       }
@@ -239,9 +242,7 @@ public class SSOCookieServlet extends NORDUnetHtmlServlet {
             res.sendRedirect(setEmailUrl);
             return;
          }
-         if (log.isTraceEnabled()) {
-            log.trace("Redirecting to " + gotoUrl);
-         }
+         log.trace("Redirecting to " + gotoUrl);
          res.sendRedirect(gotoUrl);
       }
    }
