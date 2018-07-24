@@ -97,6 +97,7 @@ public class SSOCookieServlet extends NORDUnetHtmlServlet {
          username = req.getRemoteUser();
       }
       if (username == null || (username != null && username.length() == 0)) {
+         res.setContentType("text/html");
          log.error("No REMOTE_USER header");
          errorPage(res, "Unknown user");
          return;
@@ -138,6 +139,7 @@ public class SSOCookieServlet extends NORDUnetHtmlServlet {
       }
 
       if (requestedApplicationName == null) {
+         res.setContentType("text/html");
          res.setStatus(HttpServletResponse.SC_FORBIDDEN);
          String error;
          try {
@@ -266,6 +268,7 @@ public class SSOCookieServlet extends NORDUnetHtmlServlet {
 
    // TODO A real error page
    private void errorPage(HttpServletResponse res, String error) throws IOException {
+      res.setContentType("text/html");
       PrintWriter writer = res.getWriter();
       if (error != null) {
          writeHtmlStart(writer, "Error setting SSO cookie", Collections.singletonList(error));
@@ -276,6 +279,7 @@ public class SSOCookieServlet extends NORDUnetHtmlServlet {
    }
 
    private void accessDeniedPage(HttpServletResponse res) throws IOException {
+      res.setContentType("text/html");
       res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You do not have access to the application");
    }
 
