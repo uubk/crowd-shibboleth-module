@@ -139,6 +139,7 @@ public class SSOCookieServlet extends NORDUnetHtmlServlet {
       }
       if (originalRequestUrl == null || originalRequestUrl.trim().length() == 0) {
          requestedApplicationName = "crowd";
+         originalRequestUrl = "/crowd/console/";
       }
 
       if (requestedApplicationName == null) {
