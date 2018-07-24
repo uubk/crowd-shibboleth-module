@@ -164,7 +164,8 @@ public class SSOCookieServlet extends NORDUnetHtmlServlet {
       authCtx.setValidationFactors(validationFactors);
       CrowdSSOAuthenticationToken crowdAuthRequest = null;
       try {
-         crowdAuthRequest = new CrowdSSOAuthenticationToken(tokenAuthenticationManager.authenticateUserWithoutValidatingPassword(authCtx).getRandomHash());
+         Application app = applicationManager.findByName(requestedApplicationName);
+         crowdAuthRequest = new CrowdSSOAuthenticationToken(tokenAuthenticationManager.authenticateUserWithoutValidatingPassword(app, authCtx).getRandomHash());
       } catch (InvalidAuthenticationException e) {
          log.error("Invalid authentication", e);
          errorPage(res, e.getMessage());
@@ -177,13 +178,13 @@ public class SSOCookieServlet extends NORDUnetHtmlServlet {
          log.error("Account is inactive: {}", e.getMessage());
          errorPage(res, e.getMessage());
          return;
-      } catch (ObjectNotFoundException e) {
-         log.error("Object not found: {}", e.getMessage());
-         accessDeniedPage(res);
-         return;
       } catch (OperationFailedException e) {
          log.error("Could not authenticate user", e);
          errorPage(res, e.getMessage());
+      } catch (Exception e) {
+         log.error("Internal Error: {}", e.getMessage());
+         errorPage(res, e.getMessage());
+         return;
       }
 
       // fix for Confluence where the response filter is sometimes null.
